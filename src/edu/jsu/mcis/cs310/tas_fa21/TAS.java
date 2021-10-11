@@ -1,10 +1,15 @@
 package edu.jsu.mcis.cs310.tas_fa21;
 
+//"C:\Users\Graham\Desktop\JSU Resources\Software Engineering I\Team F Project\github\TeamF\src\edu\jsu\mcis\cs310\tas_fa21\TAS.java"
+
 public class TAS {
 
     public static void main(String[] args) {
         
-        // TODO code application logic here
+        TASDataBase test = new TASDataBase();
+        
+        int punchid = 1;
+        test.getPunch(punchid);
         
     }
     
