@@ -27,9 +27,6 @@ public class TASDataBase {
     String username = "TeamF";
     String password = "R259";
     
-    String query;
-    
-    
     public TASDataBase(){
 
          try {
@@ -45,27 +42,39 @@ public class TASDataBase {
     //Change to punch type once in project
     public Punch getPunch(int id){
         /*Prepare query for punch with provided id*/
-        query = "SELECT * FROM punch WHERE id=" + id;
+        String query = "SELECT * FROM punch WHERE id=?";
         
         try{
            
             PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, String.valueOf(id));
             boolean hasresults = pstmt.execute();
             
             if(hasresults){
                 
                 resultset = pstmt.getResultSet();
                 resultset.next();
-                String punchid = resultset.getString("id");
-                String desc = resultset.getString("description");
                 
-                System.out.print(punchid);
-                System.out.print(desc);
+                String punchtypeid = resultset.getString("punchtypeid");
+                String badgeid = resultset.getString("badgeid");
+                String terminalid = resultset.getString("terminalid");
+                
+                //terminal id, badge id, punchtype id <-- Punch constructor param
+                //Call punch constructor and return to caller
+                
+                System.out.print("Punch type: " + punchtypeid + '\n');
+                System.out.print("Badge ID: " + badgeid + '\n');
+                System.out.print("Terminal Id: " + terminalid);
+                
+                Punch punch = new Punch(terminalid, badgeid, punchtypeid);
+                
             }
             
         } catch (Exception e) { e.printStackTrace(); }
-
+        
+        return punch ;
     }
+    
     
     public void close(){
         
