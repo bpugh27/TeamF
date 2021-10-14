@@ -1,49 +1,71 @@
 
 package edu.jsu.mcis.cs310.tas_fa21;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-
-/**
- *
- * @author Brandon Pugh
- */
-
+import java.util.*;
 
 public class Punch {
-
-        public static void main(String[] args) {
-            
-    }
-        public enum PunchType {
-    CLOCK_OUT("CLOCK OUT"),
-    CLOCK_IN("CLOCK IN"),
-    TIME_OUT("TIME OUT");
-    private final String description;
-    private PunchType(String d) { description = d; }
-    @Override
-    public String toString() { return description; }
-}
+    private int terminalid;
+    private String badgeid;
+    private long originaltimestamp;
+    private String punchtype;
+    private String adjustmentype;
+    
+    Punch(int terminalid, Badge badge, int punchtypeid){
+        this.terminalid = terminalid;
+        this.badgeid = badge.getId();
+        if(punchtypeid == 0)
+            this.punchtype = PunchType.CLOCK_IN.toString();
+        else if(punchtypeid == 1)
+             this.punchtype = PunchType.CLOCK_OUT.toString();
+        else
+             this.punchtype = PunchType.TIME_OUT.toString();
         
-    private int Punch;
-    
-    
-
-    /**
-     * Get the value of Punch
-     *
-     * @return the value of Punch
-     */
-    public int getPunch() {
-        return Punch;
+        this.originaltimestamp = System.currentTimeMillis();
     }
 
-    /**
-     * Set the value of Punch
-     *
-     * @param Punch new value of Punch
-     */
-    public void setPunch(int Punch) {
-        this.Punch = Punch;
+    public int getTerminalid() {
+        return terminalid;
     }
 
- 
+    public void setTerminalid(int terminalid) {
+        this.terminalid = terminalid;
+    }
+
+    public String getBadgeid() {
+        return badgeid;
+    }
+
+    public void setBadgeid(String badgeid) {
+        this.badgeid = badgeid;
+    }
+
+    public long getOriginaltimestamp() {
+        return originaltimestamp;
+    }
+
+    public void setOriginaltimestamp(long originaltimestamp) {
+        this.originaltimestamp = originaltimestamp;
+    }
+
+    public String getPunchtype() {
+        return punchtype;
+    }
+
+    public void setPunchtype(String punchtype) {
+        this.punchtype = punchtype;
+    }
+    
+    public String printOriginal(){
+        Calendar cal = new GregorianCalendar();
+        String format = "EEE dd/MM/yyyy HH:mm:ss";
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        cal.setTimeInMillis(this.originaltimestamp);
+        String formattedDate = sdf.format(cal.getTime()).toUpperCase();
+        String s = "#" + this.getBadgeid() + " " + this.getPunchtype() + ": " + formattedDate;
+        return s;
+        
+    }
+    
+    
 }
