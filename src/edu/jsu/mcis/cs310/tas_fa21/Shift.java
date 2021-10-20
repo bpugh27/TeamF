@@ -12,6 +12,11 @@ public class Shift {
     private int id, gracePeriod, dock, interval, lunchDeduct;
     private final String description;
     
+    //Shift should read a timestamp as a long type
+    //then converted and stored as LocalTime or LocalDateTime variables
+    //Seconds and nanoseconds should be zeroed
+    
+    
     public Shift(int interval, int id, int gracePeriod, Time begin, int dock, Time lunchBegin, int lunchDeduct, Time lunchEnd, Time end, String description) {
         this.interval = interval;
         this.id = id;
