@@ -14,12 +14,18 @@ public class Punch {
     Punch(int terminalid, Badge badge, int punchtypeid){
         this.terminalid = terminalid;
         this.badgeid = badge.getId();
-        if(punchtypeid == 0)
-            this.punchtype = PunchType.CLOCK_IN.toString();
-        else if(punchtypeid == 1)
-             this.punchtype = PunchType.CLOCK_OUT.toString();
-        else
-             this.punchtype = PunchType.TIME_OUT.toString();
+        
+        switch (punchtypeid) {
+            case 0:
+                this.punchtype = PunchType.CLOCK_IN.toString();
+                break;
+            case 1:
+                this.punchtype = PunchType.CLOCK_OUT.toString();
+                break;
+            default:
+                this.punchtype = PunchType.TIME_OUT.toString();
+                break;
+        }
         
         this.originaltimestamp = System.currentTimeMillis();
     }
@@ -58,7 +64,7 @@ public class Punch {
     
     public String printOriginal(){
         Calendar cal = new GregorianCalendar();
-        String format = "EEE dd/MM/yyyy HH:mm:ss";
+        String format = "EEE dd/MM/yyyy HGregorianCalendarH:mm:ss";
         SimpleDateFormat sdf = new SimpleDateFormat(format);
         cal.setTimeInMillis(this.originaltimestamp);
         String formattedDate = sdf.format(cal.getTime()).toUpperCase();
