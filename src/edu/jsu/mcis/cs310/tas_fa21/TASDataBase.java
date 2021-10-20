@@ -11,9 +11,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-
 
 public class TASDataBase {
     
@@ -27,6 +24,7 @@ public class TASDataBase {
     String username = "TeamF";
     String password = "R259";
     
+    //Create and store database connection
     public TASDataBase(){
 
          try {
@@ -44,6 +42,52 @@ public class TASDataBase {
         /*Prepare query for punch with provided id*/
         String query = "SELECT * FROM punch WHERE id=?";
         
+        String badgeid = null;
+        String punchtypeid = null;
+        String terminalid = null;
+            
+        try{
+           
+            PreparedStatement pstmt = conn.prepareStatement(query);
+            pstmt.setString(1, String.valueOf(id));
+            boolean hasresults = pstmt.execute();
+            
+            
+            
+            if(hasresults){
+                
+                resultset = pstmt.getResultSet();
+                resultset.next();
+                
+                punchtypeid = resultset.getString("punchtypeid");
+                badgeid = resultset.getString("badgeid");
+                terminalid = resultset.getString("terminalid");
+                
+                //terminal id, badge id, punchtype id <-- Punch constructor param
+                //Call punch constructor and return to caller
+                
+                //Test Output Block
+                System.out.print("Punch type: " + punchtypeid + '\n');
+                System.out.print("Badge ID: " + badgeid + '\n');
+                System.out.print("Terminal Id: " + terminalid);
+                
+                
+                
+            }
+            
+        } catch (Exception e) { e.printStackTrace(); }
+        
+        Punch punch = new Punch(Integer.parseInt(terminalid), getBadge(badgeid), Integer.parseInt(punchtypeid));
+        
+        return punch ;
+    }
+    
+    
+    public Badge getBadge(String id){
+        
+        String query = "SELECT * FROM punch WHERE id=?";
+        String description = null;
+        
         try{
            
             PreparedStatement pstmt = conn.prepareStatement(query);
@@ -55,24 +99,23 @@ public class TASDataBase {
                 resultset = pstmt.getResultSet();
                 resultset.next();
                 
-                String punchtypeid = resultset.getString("punchtypeid");
-                String badgeid = resultset.getString("badgeid");
-                String terminalid = resultset.getString("terminalid");
-                
-                //terminal id, badge id, punchtype id <-- Punch constructor param
-                //Call punch constructor and return to caller
-                
-                System.out.print("Punch type: " + punchtypeid + '\n');
-                System.out.print("Badge ID: " + badgeid + '\n');
-                System.out.print("Terminal Id: " + terminalid);
-                
-                Punch punch = new Punch(terminalid, badgeid, punchtypeid);
-                
+                description = resultset.getString("description");
             }
-            
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {e.printStackTrace(); }
+                
+        Badge badge = new Badge(id, description);
+        return  badge;
+    }
+    
+    
+    public Shift getShift(){
         
-        return punch ;
+        //public Shift(int interval, int id, int gracePeriod, Time begin, int dock, Time lunchBegin, int lunchDeduct, Time lunchEnd, Time end, String description) 
+        
+        String query = "SELECT * FROM punch WHERE id=?";
+        String 
+        
+        return shift;
     }
     
     
