@@ -8,7 +8,7 @@ public class TAS {
         
         TASDataBase test = new TASDataBase();
         
-        int punchid = 147;
+        int punchid = 1;
         test.getPunch(punchid);
         
     }
