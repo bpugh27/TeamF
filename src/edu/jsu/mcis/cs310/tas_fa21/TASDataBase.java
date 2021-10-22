@@ -141,8 +141,9 @@ public class TASDataBase {
 
                 //public Shift(int interval, int id, int gracePeriod, Time begin, int dock, Time lunchBegin, 
                 //int lunchDeduct, Time lunchEnd, Time end, String description)
-                Shift s = new Shift(shiftID, description, shiftStart, shiftStop, interval, 
-                              gracePeriod, dock, lunchStart, lunchStop, lunchDeduct);
+                
+                s = new Shift(shiftID, description, shiftStart, shiftStop, interval,
+                        gracePeriod, dock, lunchStart, lunchStop, lunchDeduct);
             }
         }
         catch(Exception e) {
@@ -152,16 +153,54 @@ public class TASDataBase {
     
     }
     
+    public Shift getShift(Badge b) {
+        
+        Shift s = null;
+        
+        try {
+            pstSelect = conn.prepareStatement("SELECT employee.shiftid, shift.* FROM employee, shift WHERE employee.shiftid = shift.id AND employee.badgeid = ?");
+            pstSelect.setString(1, b.getId());
+
+            boolean hasresult = pstSelect.execute();
+             
+            if (hasresult) {
+                
+                ResultSet resultset = pstSelect.getResultSet();
+                resultset.first();
+
+                //results
+                int shiftid = resultset.getInt("shiftid");
+                
+                String description = resultset.getString("description");
+                LocalTime shiftStart = LocalTime.parse(resultset.getString("start"));
+                LocalTime shiftStop = LocalTime.parse(resultset.getString("stop"));
+                int interval = resultset.getInt("interval");
+                int gracePeriod = resultset.getInt("graceperiod");
+                int dock = resultset.getInt("dock");
+                LocalTime lunchStart = LocalTime.parse(resultset.getString("lunchstart"));
+                LocalTime lunchStop = LocalTime.parse(resultset.getString("lunchstop"));
+                int lunchDeduct = resultset.getInt("lunchdeduct");
+
+                s = new Shift(shiftid, description, shiftStart, shiftStop, interval, 
+                          gracePeriod, dock, lunchStart, lunchStop, lunchDeduct);
+                }
+              
+            }
+
+        catch(Exception e) {
+            System.err.println("** getShift: " + e.toString());
+        }
+        
+        
+        return s;
+    }
     
     public void close(){
         
-        /* Close Database Connection */
-      
+        /*close the database*/
         try{
             conn.close();
         } catch (Exception e) { e.printStackTrace(); }
 
     }   
-    
-    
 }
