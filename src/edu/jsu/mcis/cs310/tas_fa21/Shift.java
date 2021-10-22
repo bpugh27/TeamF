@@ -1,107 +1,142 @@
 package edu.jsu.mcis.cs310.tas_fa21;
 
-import java.util.Calendar;
-import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.GregorianCalendar;
-
-
+import java.time.*;
+import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class Shift {
-    private Time shiftBegin, lunchBegin, lunchEnd, shiftEnd;
-    private int id, gracePeriod, dock, interval, lunchDeduct;
-    private final String description;
     
-    //Shift should read a timestamp as a long type
-    //then converted and stored as LocalTime or LocalDateTime variables
-    //Seconds and nanoseconds should be zeroed
+    private int id, interval, gracePeriod, dock, lunchDeduct, lunchDuration, shiftDuration;
+    private String description;
+    private LocalTime start;
+    private LocalTime stop;
+    private LocalTime lunchStart;
+    private LocalTime lunchStop;
     
-    
-    public Shift(int interval, int id, int gracePeriod, Time begin, int dock, Time lunchBegin, int lunchDeduct, Time lunchEnd, Time end, String description) {
-        this.interval = interval;
+
+    public Shift(int id, String description, LocalTime start, LocalTime stop, int interval, 
+            int gracePeriod, int dock, LocalTime lunchStart, LocalTime lunchStop, int lunchDeduct) {
         this.id = id;
-        this.gracePeriod = gracePeriod;
-        this.shiftBegin = begin;
-        this.dock = dock;
-        this.lunchBegin = lunchBegin;
-        this.lunchDeduct = lunchDeduct;
-        this.lunchEnd = lunchEnd;
-        this.shiftEnd = end;
         this.description = description;
+        this.start = start;
+        this.stop = stop;
+        this.interval = interval;
+        this.gracePeriod = gracePeriod;
+        this.dock = dock;
+        this.lunchStart = lunchStart;
+        this.lunchStop = lunchStop;
+        this.lunchDeduct = lunchDeduct;
+        this.lunchDuration = (int) MINUTES.between(lunchStart, lunchStop);
+        this.shiftDuration = (int) MINUTES.between(start, stop);
     }
     
-    Shift(int interval, int Id, int gracePeriod, int dock, int lunchDeduct, String des, Time begin, Time end, Time lunchBegin, Time lunchEnd) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-    //getter
-
-    public Time getShiftBegin() {
-        return shiftBegin;
-    }
-
-    public Time getLunchBegin() {
-        return lunchBegin;
-    }
-
-    public Time getLunchEnd() {
-        return lunchEnd;
-    }
-
-    public Time getShiftEnd() {
-        return shiftEnd;
-    }
-
     public int getId() {
         return id;
     }
 
-    public int getGracePeriod() {
-        return gracePeriod;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getDock() {
-        return dock;
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public LocalTime getStart() {
+        return start;
+    }
+
+    public void setStart(LocalTime start) {
+        this.start = start;
+    }
+
+    public LocalTime getStop() {
+        return stop;
+    }
+
+    public void setStop(LocalTime stop) {
+        this.stop = stop;
     }
 
     public int getInterval() {
         return interval;
     }
 
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
+
+    public int getGracePeriod() {
+        return gracePeriod;
+    }
+
+    public void setGracePeriod(int gracePeriod) {
+        this.gracePeriod = gracePeriod;
+    }
+
+    public int getDock() {
+        return dock;
+    }
+
+    public void setDock(int dock) {
+        this.dock = dock;
+    }
+
+    public LocalTime getLunchStart() {
+        return lunchStart;
+    }
+
+    public void setLunchStart(LocalTime lunchStart) {
+        this.lunchStart = lunchStart;
+    }
+
+    public LocalTime getLunchStop() {
+        return lunchStop;
+    }
+
+    public void setLunchStop(LocalTime lunchStop) {
+        this.lunchStop = lunchStop;
+    }
+
     public int getLunchDeduct() {
         return lunchDeduct;
     }
 
-    public String getDescription() {
-        return description;
+    public void setLunchDeduct(int lunchDeduct) {
+        this.lunchDeduct = lunchDeduct;
     }
+
+    public int getLunchDuration() {
+        return lunchDuration;
+    }
+
     
-    private long getElapsedTime(Time s, Time e) {
-        Calendar BeginCal = GregorianCalendar.getInstance();
-        Calendar endCal = GregorianCalendar.getInstance();
-        BeginCal.setTimeInMillis(s.getTime());
-        endCal.setTimeInMillis(e.getTime());
-        long begin, end;
-        begin = BeginCal.getTimeInMillis();
-        end = endCal.getTimeInMillis();
-        return (end - begin) / (60 * 1000);
+    public int getShiftDuration() {
+        return shiftDuration;
     }
+
+    //Shift 1: 07:00 - 15:30 (510 minutes); Lunch: 12:00 - 12:30 (30 minutes)
+    
     @Override
-    public String toString() {
-    
-        String beginTime = (new SimpleDateFormat("HH:mm")).format(shiftBegin.getTime());
-        String lunchBeginTime = (new SimpleDateFormat("HH:mm")).format(lunchBegin.getTime());
-        String lunchEndTime = (new SimpleDateFormat("HH:mm")).format(lunchEnd.getTime());
-        String endTime = (new SimpleDateFormat("HH:mm")).format(shiftEnd.getTime());
-        String data = "";
+    public String toString()
+    {
+        StringBuilder s = new StringBuilder();
         
-        data += description + ": ";
-        data += beginTime + " - ";
-        data += getElapsedTime(shiftBegin, shiftEnd) + " minutes);";
-        data += " Lunch: " + lunchBeginTime + " - ";
-        data += lunchEndTime + " (";
-        data += getElapsedTime(lunchBegin, lunchEnd) + " minutes)";
-        data += endTime + " (";
-        return data;
+        s.append(description).append(": ").append(start);
+        s.append(" - ").append(stop).append(" (").append(shiftDuration);
+        s.append(" minutes); Lunch: ").append(lunchStart).append(" - ");
+        s.append(lunchStop).append(" (").append(lunchDuration).append(" minutes)");
+        
+        
+        return s.toString();
+
     }
-      
+    
+    
+    
+    
+    
 }

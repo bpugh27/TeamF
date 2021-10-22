@@ -11,6 +11,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
+import java.time.*;
+
 
 public class TASDataBase {
     
@@ -108,14 +110,46 @@ public class TASDataBase {
     }
     
     
-    public Shift getShift(){
+    public Shift getShift(int shiftID){
         
         //public Shift(int interval, int id, int gracePeriod, Time begin, int dock, Time lunchBegin, int lunchDeduct, Time lunchEnd, Time end, String description) 
         
-        String query = "SELECT * FROM punch WHERE id=?";
-        String 
+        Shift s = null;
         
-        return shift;
+        try {
+            pstSelect = conn.prepareStatement("SELECT * from shift where id = ?");
+            pstSelect.setInt(1, shiftID);
+            
+            boolean hasresult = pstSelect.execute();
+            if(hasresult) {
+                System.err.println("Getting shift data. ");
+                ResultSet resultset = pstSelect.getResultSet();
+                resultset.first();
+                
+                //getting the results?
+                String description = resultset.getString("description");
+                LocalTime shiftStart = LocalTime.parse(resultset.getString("start"));
+                LocalTime shiftStop = LocalTime.parse(resultset.getString("stop"));
+                int interval = resultset.getInt("interval");
+                int gracePeriod = resultset.getInt("graceperiod");
+                int dock = resultset.getInt("dock");
+                
+                LocalTime lunchStart = LocalTime.parse(resultset.getString("lunchstart"));
+                LocalTime lunchStop = LocalTime.parse(resultset.getString("lunchstop"));
+                
+                int lunchDeduct = resultset.getInt("lunchdeduct");
+
+                //public Shift(int interval, int id, int gracePeriod, Time begin, int dock, Time lunchBegin, 
+                //int lunchDeduct, Time lunchEnd, Time end, String description)
+                Shift s = new Shift(shiftID, description, shiftStart, shiftStop, interval, 
+                              gracePeriod, dock, lunchStart, lunchStop, lunchDeduct);
+            }
+        }
+        catch(Exception e) {
+            System.err.println("** getShift: " + e.toString());
+    }
+    return s;
+    
     }
     
     
