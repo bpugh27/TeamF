@@ -4,11 +4,13 @@ import java.util.Calendar;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
+import java.time.*;
+import java.time.temporal.ChronoUnit;
 
 
 
 public class Shift {
-    private Time shiftBegin, lunchBegin, lunchEnd, shiftEnd;
+    private LocalTime shiftBegin, lunchBegin, lunchEnd, shiftEnd;
     private int id, gracePeriod, dock, interval, lunchDeduct;
     private final String description;
     
@@ -17,7 +19,8 @@ public class Shift {
     //Seconds and nanoseconds should be zeroed
     
     
-    public Shift(int interval, int id, int gracePeriod, Time begin, int dock, Time lunchBegin, int lunchDeduct, Time lunchEnd, Time end, String description) {
+    public Shift(int interval, int id, int gracePeriod, LocalTime begin, int dock,
+            LocalTime lunchBegin, int lunchDeduct, LocalTime lunchEnd, LocalTime end, String description) {
         this.interval = interval;
         this.id = id;
         this.gracePeriod = gracePeriod;
@@ -35,19 +38,19 @@ public class Shift {
     }
     //getter
 
-    public Time getShiftBegin() {
+    public LocalTime getShiftBegin() {
         return shiftBegin;
     }
 
-    public Time getLunchBegin() {
+    public LocalTime getLunchBegin() {
         return lunchBegin;
     }
 
-    public Time getLunchEnd() {
+    public LocalTime getLunchEnd() {
         return lunchEnd;
     }
 
-    public Time getShiftEnd() {
+    public LocalTime getShiftEnd() {
         return shiftEnd;
     }
 
@@ -75,33 +78,44 @@ public class Shift {
         return description;
     }
     
-    private long getElapsedTime(Time s, Time e) {
-        Calendar BeginCal = GregorianCalendar.getInstance();
-        Calendar endCal = GregorianCalendar.getInstance();
-        BeginCal.setTimeInMillis(s.getTime());
-        endCal.setTimeInMillis(e.getTime());
-        long begin, end;
-        begin = BeginCal.getTimeInMillis();
-        end = endCal.getTimeInMillis();
-        return (end - begin) / (60 * 1000);
-    }
+    
+//    private long getElapsedTime(Time s, Time e) {
+//        
+//        Calendar BeginCal = GregorianCalendar.getInstance();
+//        Calendar endCal = GregorianCalendar.getInstance();
+//        BeginCal.setTimeInMillis(s.getTime());
+//        endCal.setTimeInMillis(e.getTime());
+//        long begin, end;
+//        begin = BeginCal.getTimeInMillis();
+//        end = endCal.getTimeInMillis();
+//        
+//        return (end - begin) / (60 * 1000);
+//    }   
+    
     @Override
     public String toString() {
     
-        String beginTime = (new SimpleDateFormat("HH:mm")).format(shiftBegin.getTime());
-        String lunchBeginTime = (new SimpleDateFormat("HH:mm")).format(lunchBegin.getTime());
-        String lunchEndTime = (new SimpleDateFormat("HH:mm")).format(lunchEnd.getTime());
-        String endTime = (new SimpleDateFormat("HH:mm")).format(shiftEnd.getTime());
+        String beginTime = shiftBegin.toString();
+        String lunchBeginTime = lunchBegin.toString();
+        String lunchEndTime = lunchEnd.toString();
+        String endTime = shiftEnd.toString();
         String data = "";
         
-        data += description + ": ";
-        data += beginTime + " - ";
-        data += getElapsedTime(shiftBegin, shiftEnd) + " minutes);";
-        data += " Lunch: " + lunchBeginTime + " - ";
-        data += lunchEndTime + " (";
-        data += getElapsedTime(lunchBegin, lunchEnd) + " minutes)";
-        data += endTime + " (";
-        return data;
+//        data += description + ": ";
+//        data += beginTime + " - ";
+//        data += getElapsedTime(shiftBegin, shiftEnd) + " minutes);";
+//        data += " Lunch: " + lunchBeginTime + " - ";
+//        data += lunchEndTime + " (";
+//        data += getElapsedTime(lunchBegin, lunchEnd) + " minutes)";
+//        data += endTime + " (";
+        
+        StringBuilder d = new StringBuilder();
+        d.append(description).append(": ").append(beginTime).append(" - ").append(endTime).append("  ");
+        d.append(shiftBegin.until(shiftEnd, ChronoUnit.MINUTES)).append(" minutes\n");
+        d.append("Lunch: ").append(lunchBeginTime).append(" - ").append(lunchEndTime).append("  ").append(lunchBegin.until(lunchEnd, ChronoUnit.MINUTES)).append(" minutes");
+        
+        
+        return d.toString();
     }
       
 }
