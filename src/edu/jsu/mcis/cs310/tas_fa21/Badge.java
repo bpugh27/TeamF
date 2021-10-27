@@ -31,5 +31,16 @@ public class Badge {
         this.description = description;
     }
     
+    public String toString() {
+        
+        // #12565C60 (Chapman, Joshua E)
+        
+        StringBuilder s = new StringBuilder();
+        
+        s.append('#').append(id).append(" (").append(description).append(')');
+        
+        return s.toString();
+        
+    }
     
 }
