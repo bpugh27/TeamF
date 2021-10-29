@@ -14,30 +14,102 @@ public class Shift {
     private int id, gracePeriod, dock, interval, lunchDeduct;
     private final String description;
     
-    //Shift should read a timestamp as a long type
-    //then converted and stored as LocalTime or LocalDateTime variables
-    //Seconds and nanoseconds should be zeroed
+    private int id, interval, gracePeriod, dock, lunchDeduct, lunchDuration, shiftDuration;
+    private String description;
+    private LocalTime start;
+    private LocalTime stop;
+    private LocalTime lunchStart;
+    private LocalTime lunchStop;
     
     
     public Shift(int interval, int id, int gracePeriod, LocalTime begin, int dock,
             LocalTime lunchBegin, int lunchDeduct, LocalTime lunchEnd, LocalTime end, String description) {
         this.interval = interval;
         this.id = id;
-        this.gracePeriod = gracePeriod;
-        this.shiftBegin = begin;
-        this.dock = dock;
-        this.lunchBegin = lunchBegin;
-        this.lunchDeduct = lunchDeduct;
-        this.lunchEnd = lunchEnd;
-        this.shiftEnd = end;
         this.description = description;
+        this.start = start;
+        this.stop = stop;
+        this.interval = interval;
+        this.gracePeriod = gracePeriod;
+        this.dock = dock;
+        this.lunchStart = lunchStart;
+        this.lunchStop = lunchStop;
+        this.lunchDeduct = lunchDeduct;
+        this.lunchDuration = (int) MINUTES.between(lunchStart, lunchStop);
+        this.shiftDuration = (int) MINUTES.between(start, stop);
     }
     
-    Shift(int interval, int Id, int gracePeriod, int dock, int lunchDeduct, String des, Time begin, Time end, Time lunchBegin, Time lunchEnd) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public int getId() {
+        return id;
     }
-    //getter
 
+    }
+
+    public void setStart(LocalTime start) {
+        this.start = start;
+    }
+
+    public LocalTime getStop() {
+        return stop;
+    }
+
+    public void setStop(LocalTime stop) {
+        this.stop = stop;
+    }
+
+    public int getInterval() {
+        return interval;
+    }
+
+    public void setInterval(int interval) {
+        this.interval = interval;
+    }
+
+    public int getGracePeriod() {
+        return gracePeriod;
+    }
+
+    public void setGracePeriod(int gracePeriod) {
+        this.gracePeriod = gracePeriod;
+    }
+
+    public int getDock() {
+        return dock;
+    }
+
+    public void setDock(int dock) {
+        this.dock = dock;
+    }
+
+    public LocalTime getLunchStart() {
+        return lunchStart;
+    }
+
+    public void setLunchStart(LocalTime lunchStart) {
+        this.lunchStart = lunchStart;
+    }
+
+    public LocalTime getLunchStop() {
+        return lunchStop;
+    }
+
+    public void setLunchStop(LocalTime lunchStop) {
+        this.lunchStop = lunchStop;
+    }
+
+    public int getLunchDeduct() {
+        return lunchDeduct;
+    }
+
+    public void setLunchDeduct(int lunchDeduct) {
+        this.lunchDeduct = lunchDeduct;
+    }
+
+    public int getLunchDuration() {
+        return lunchDuration;
+    }
+
+    
     public LocalTime getShiftBegin() {
         return shiftBegin;
     }
@@ -52,70 +124,4 @@ public class Shift {
 
     public LocalTime getShiftEnd() {
         return shiftEnd;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public int getGracePeriod() {
-        return gracePeriod;
-    }
-
-    public int getDock() {
-        return dock;
-    }
-
-    public int getInterval() {
-        return interval;
-    }
-
-    public int getLunchDeduct() {
-        return lunchDeduct;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-    
-    
-//    private long getElapsedTime(Time s, Time e) {
-//        
-//        Calendar BeginCal = GregorianCalendar.getInstance();
-//        Calendar endCal = GregorianCalendar.getInstance();
-//        BeginCal.setTimeInMillis(s.getTime());
-//        endCal.setTimeInMillis(e.getTime());
-//        long begin, end;
-//        begin = BeginCal.getTimeInMillis();
-//        end = endCal.getTimeInMillis();
-//        
-//        return (end - begin) / (60 * 1000);
-//    }   
-    
-    @Override
-    public String toString() {
-    
-        String beginTime = shiftBegin.toString();
-        String lunchBeginTime = lunchBegin.toString();
-        String lunchEndTime = lunchEnd.toString();
-        String endTime = shiftEnd.toString();
-        String data = "";
-        
-//        data += description + ": ";
-//        data += beginTime + " - ";
-//        data += getElapsedTime(shiftBegin, shiftEnd) + " minutes);";
-//        data += " Lunch: " + lunchBeginTime + " - ";
-//        data += lunchEndTime + " (";
-//        data += getElapsedTime(lunchBegin, lunchEnd) + " minutes)";
-//        data += endTime + " (";
-        
-        StringBuilder d = new StringBuilder();
-        d.append(description).append(": ").append(beginTime).append(" - ").append(endTime).append("  ");
-        d.append(shiftBegin.until(shiftEnd, ChronoUnit.MINUTES)).append(" minutes\n");
-        d.append("Lunch: ").append(lunchBeginTime).append(" - ").append(lunchEndTime).append("  ").append(lunchBegin.until(lunchEnd, ChronoUnit.MINUTES)).append(" minutes");
-        
-        
-        return d.toString();
-    }
-      
 }
