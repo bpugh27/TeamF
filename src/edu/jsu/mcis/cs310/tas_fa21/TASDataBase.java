@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package edu.jsu.mcis.cs310.tas_fa21;
 
 
@@ -41,17 +37,16 @@ public class TASDataBase {
     
     //Change to punch type once in project
     public Punch getPunch(int id){
+        
+        Punch punch = null;
+        
         /*Prepare query for punch with provided id*/
         String query = "SELECT * FROM punch WHERE id=?";
-        
-        String badgeid = null;
-        String punchtypeid = null;
-        String terminalid = null;
             
         try{
            
             PreparedStatement pstmt = conn.prepareStatement(query);
-            pstmt.setString(1, String.valueOf(id));
+            pstmt.setInt(1, id);
             boolean hasresults = pstmt.execute();
             
             
@@ -61,33 +56,27 @@ public class TASDataBase {
                 resultset = pstmt.getResultSet();
                 resultset.next();
                 
-                punchtypeid = resultset.getString("punchtypeid");
-                badgeid = resultset.getString("badgeid");
-                terminalid = resultset.getString("terminalid");
+                int punchtypeid = resultset.getInt("punchtypeid");
+                String badgeid = resultset.getString("badgeid");
+                int terminalid = resultset.getInt("terminalid");
+                LocalDateTime originaltimestamp = resultset.getTimestamp("originaltimestamp").toLocalDateTime();
                 
-                //terminal id, badge id, punchtype id <-- Punch constructor param
-                //Call punch constructor and return to caller
-                
-                //Test Output Block
-                System.out.print("Punch type: " + punchtypeid + '\n');
-                System.out.print("Badge ID: " + badgeid + '\n');
-                System.out.print("Terminal Id: " + terminalid);
-                
-                
+                punch = new Punch(id, terminalid, getBadge(badgeid), punchtypeid, originaltimestamp);
                 
             }
             
         } catch (Exception e) { e.printStackTrace(); }
         
-        Punch punch = new Punch(Integer.parseInt(terminalid), getBadge(badgeid), Integer.parseInt(punchtypeid));
         
-        return punch ;
+        
+        return punch;
     }
     
     
     public Badge getBadge(String id){
         
-        String query = "SELECT * FROM punch WHERE id=?";
+        String query = "SELECT * FROM badge WHERE id=?";
+        
         String description = null;
         
         try{
@@ -102,11 +91,12 @@ public class TASDataBase {
                 resultset.next();
                 
                 description = resultset.getString("description");
+               
             }
         } catch (Exception e) {e.printStackTrace(); }
                 
         Badge badge = new Badge(id, description);
-        return  badge;
+        return badge;
     }
     
     
@@ -142,8 +132,7 @@ public class TASDataBase {
                 //public Shift(int interval, int id, int gracePeriod, Time begin, int dock, Time lunchBegin, 
                 //int lunchDeduct, Time lunchEnd, Time end, String description)
                 
-                s = new Shift(shiftID, description, shiftStart, shiftStop, interval,
-                        gracePeriod, dock, lunchStart, lunchStop, lunchDeduct);
+                s = new Shift(interval, shiftID, gracePeriod, shiftStart, dock, lunchStart, lunchDeduct, lunchStop, shiftStop, description);
             }
         }
         catch(Exception e) {
@@ -169,7 +158,7 @@ public class TASDataBase {
                 resultset.first();
 
                 //results
-                int shiftid = resultset.getInt("shiftid");
+                int shiftID = resultset.getInt("shiftid");
                 
                 String description = resultset.getString("description");
                 LocalTime shiftStart = LocalTime.parse(resultset.getString("start"));
@@ -181,8 +170,7 @@ public class TASDataBase {
                 LocalTime lunchStop = LocalTime.parse(resultset.getString("lunchstop"));
                 int lunchDeduct = resultset.getInt("lunchdeduct");
 
-                s = new Shift(shiftid, description, shiftStart, shiftStop, interval, 
-                          gracePeriod, dock, lunchStart, lunchStop, lunchDeduct);
+                s = new Shift(interval, shiftID, gracePeriod, shiftStart, dock, lunchStart, lunchDeduct, lunchStop, shiftStop, description);
                 }
               
             }
