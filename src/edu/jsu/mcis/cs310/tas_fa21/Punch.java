@@ -1,33 +1,36 @@
-
 package edu.jsu.mcis.cs310.tas_fa21;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+//import java.time.LocalDateTime;
 import java.util.*;
 
 public class Punch {
+    private int id;
     private int terminalid;
     private String badgeid;
-    private long originaltimestamp;
-    private String punchtype;
-    private String adjustmentype;
+    private LocalDateTime originaltimestamp;
+    private PunchType punchtype;
+//    private String adjustmentype;
     
     Punch(int terminalid, Badge badge, int punchtypeid){
+        
+        this.id = 0; // for new punches
         this.terminalid = terminalid;
         this.badgeid = badge.getId();
+        this.punchtype = PunchType.values()[punchtypeid];
         
-//        switch (punchtypeid) {
-//            case 0:
-//                this.punchtype = PunchType.CLOCK_IN.toString();
-//                break;
-//            case 1:
-//                this.punchtype = PunchType.CLOCK_OUT.toString();
-//                break;
-//            default:
-//                this.punchtype = PunchType.TIME_OUT.toString();
-//                break;
-//        }
+        this.originaltimestamp = LocalDateTime.now();
+    }
+    
+    Punch(int id, int terminalid, Badge badge, int punchtypeid, LocalDateTime originaltimestamp){
         
-        this.originaltimestamp = System.currentTimeMillis();
+        this.id = id;
+        this.terminalid = terminalid;
+        this.badgeid = badge.getId();
+        this.punchtype = PunchType.values()[punchtypeid];
+        this.originaltimestamp = originaltimestamp;
+        
     }
 
     public int getTerminalid() {
@@ -46,33 +49,28 @@ public class Punch {
         this.badgeid = badgeid;
     }
 
-    public long getOriginaltimestamp() {
+    public LocalDateTime getOriginaltimestamp() {
         return originaltimestamp;
     }
 
-    public void setOriginaltimestamp(long originaltimestamp) {
-        this.originaltimestamp = originaltimestamp;
-    }
-
-    public String getPunchtype() {
+    public PunchType getPunchtype() {
         return punchtype;
     }
 
-    public void setPunchtype(String punchtype) {
-        this.punchtype = punchtype;
-    }
+
     
     public String printOriginal(){
         
-        //"#D2C39273 CLOCK IN: WED 09/05/2018 07:00:07"
+        // #D2C39273 CLOCK IN: WED 09/05/2018 07:00:07
         
-        Calendar cal = new GregorianCalendar();
-        String format = "EEE dd/MM/yyyy HGregorianCalendarH:mm:ss";
-        SimpleDateFormat sdf = new SimpleDateFormat(format);
-        cal.setTimeInMillis(this.originaltimestamp);
-        String formattedDate = sdf.format(cal.getTime()).toUpperCase();
-        String s = "#" + this.getBadgeid() + " " + this.getPunchtype() + ": " + formattedDate;
-        return s;
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
+        
+        StringBuilder s = new StringBuilder();
+        
+        s.append('#').append(badgeid).append(' ');
+        s.append(punchtype).append(": ").append(format.format(originaltimestamp).toUpperCase());
+        
+        return s.toString();
         
     }
     
