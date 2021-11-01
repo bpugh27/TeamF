@@ -1,10 +1,6 @@
 
 package edu.jsu.mcis.cs310.tas_fa21;
 
-/**
- *
- * @author Brandon Pugh
- */
 public enum PunchType {
    
     CLOCK_OUT("CLOCK OUT"),

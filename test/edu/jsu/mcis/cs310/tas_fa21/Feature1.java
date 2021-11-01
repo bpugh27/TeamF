@@ -5,12 +5,12 @@ import static org.junit.Assert.*;
 
 public class Feature1 {
 
-    private TASDatabase db;
+    private TASDataBase db;
     
     @Before
     public void setup() {
         
-        db = new TASDatabase();
+        db = new TASDataBase();
         
     }
     
