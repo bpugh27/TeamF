@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 
 
 public class TASDataBase {
@@ -70,6 +71,27 @@ public class TASDataBase {
         
         
         return punch;
+    }
+    
+    public int insertPunch(Punch p) {
+        String query;
+        
+        int updateCount;
+        
+        //get the punch data?
+        int results = 0;
+        //results = 0;
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime originalTime = p.getOriginaltimestamp();
+        //get
+        String badgeid = p.getBadge().getId(); //not working?? think its right though
+        int terminalid = p.getTerminalid(); 
+        PunchType punchtypeid = p.getPunchtype();
+        
+        try {
+            //prepare for the query
+            
+        }
     }
     
     
