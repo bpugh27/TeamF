@@ -2,11 +2,8 @@
 package edu.jsu.mcis.cs310.tas_fa21;
 
 
+import java.sql.*;
 import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 
@@ -32,7 +29,7 @@ public class TASDataBase {
              System.out.println("Connection Successful");
          }
 
-         catch (Exception e) { e.printStackTrace(); }  
+         catch (SQLException e) {}  
     }
     
     
@@ -66,33 +63,14 @@ public class TASDataBase {
                 
             }
             
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (SQLException e) {}
         
         
         
         return punch;
     }
     
-    public int insertPunch(Punch p) {
-        String query;
-        
-        int updateCount;
-        
-        //get the punch data?
-        int results = 0;
-        //results = 0;
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime originalTime = p.getOriginaltimestamp();
-        //get
-        String badgeid = p.getBadge().getId(); //not working?? think its right though
-        int terminalid = p.getTerminalid(); 
-        PunchType punchtypeid = p.getPunchtype();
-        
-        try {
-            //prepare for the query
-            
-        }
-    }
+    
     
     
     public Badge getBadge(String id){
@@ -115,7 +93,7 @@ public class TASDataBase {
                 description = resultset.getString("description");
                
             }
-        } catch (Exception e) {e.printStackTrace(); }
+        } catch (SQLException e) {}
                 
         Badge badge = new Badge(id, description);
         return badge;
@@ -157,7 +135,7 @@ public class TASDataBase {
                 s = new Shift(interval, shiftID, gracePeriod, shiftStart, dock, lunchStart, lunchDeduct, lunchStop, shiftStop, description);
             }
         }
-        catch(Exception e) {
+        catch(SQLException e) {
             System.err.println("** getShift: " + e.toString());
     }
     return s;
@@ -197,7 +175,7 @@ public class TASDataBase {
               
             }
 
-        catch(Exception e) {
+        catch(SQLException e) {
             System.err.println("** getShift: " + e.toString());
         }
         
@@ -205,12 +183,66 @@ public class TASDataBase {
         return s;
     }
     
+    public int insertPunch(Punch p) {
+        String query;
+        
+        int updateCount;
+        
+        //get the punch data?
+        int results = 0;
+        //results = 0;
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime originalTime = p.getOriginaltimestamp();
+        //get
+        String badgeid = p.getBadge().getId();
+        //not working?? think its right though
+                
+        int terminalid = p.getTerminalid(); 
+        PunchType punchtypeid = p.getPunchtype();
+        
+        try {
+            //prepare for the query
+            query = "INSERT INTO punch (terminalid, badgeid, originaltimestamp, punchtypeid) VALUES (?, ?, ?, ?)"; 
+
+            pstUpdate = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            pstUpdate.setInt(1, terminalid);
+            pstUpdate.setString(2, badgeid);
+            pstUpdate.setString(3, dtf.format(originalTime));
+            pstUpdate.setInt(4, punchtypeid.ordinal());
+        
+            updateCount = pstUpdate.executeUpdate();
+
+            if(updateCount > 0){
+
+                ResultSet resultset = pstUpdate.getGeneratedKeys(); 
+
+                if (resultset.next()){
+                    results = resultset.getInt(1);
+                }
+            }
+        }
+        catch(SQLException e) {
+        }
+        System.err.println("New Punch ID: " + results);
+        return results;              
+    }
+    
+    
+    
+
+   
+
+    
+        
+    
+
+    
     public void close(){
         
         /*close the database*/
         try{
             conn.close();
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (SQLException e) {}
 
     }   
 }

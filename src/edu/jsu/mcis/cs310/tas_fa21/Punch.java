@@ -8,7 +8,7 @@ import java.util.*;
 public class Punch {
     private int id;
     private int terminalid;
-    private String badgeid;
+    private Badge badge;
     private LocalDateTime originaltimestamp;
     private PunchType punchtype;
 //    private String adjustmentype;
@@ -17,7 +17,7 @@ public class Punch {
         
         this.id = 0; // for new punches
         this.terminalid = terminalid;
-        this.badgeid = badge.getId();
+        this.badge= badge;
         this.punchtype = PunchType.values()[punchtypeid];
         
         this.originaltimestamp = LocalDateTime.now();
@@ -27,7 +27,7 @@ public class Punch {
         
         this.id = id;
         this.terminalid = terminalid;
-        this.badgeid = badge.getId();
+        this.badge = badge;
         this.punchtype = PunchType.values()[punchtypeid];
         this.originaltimestamp = originaltimestamp;
         
@@ -41,12 +41,12 @@ public class Punch {
         this.terminalid = terminalid;
     }
 
-    public String getBadgeid() {
-        return badgeid;
+    public Badge getBadge() {
+        return badge;
     }
 
-    public void setBadgeid(String badgeid) {
-        this.badgeid = badgeid;
+    public void setBadge(Badge badge) {
+        this.badge = badge;
     }
 
     public LocalDateTime getOriginaltimestamp() {
@@ -67,7 +67,7 @@ public class Punch {
         
         StringBuilder s = new StringBuilder();
         
-        s.append('#').append(badgeid).append(' ');
+        s.append('#').append(badge.getId()).append(' ');
         s.append(punchtype).append(": ").append(format.format(originaltimestamp).toUpperCase());
         
         return s.toString();
