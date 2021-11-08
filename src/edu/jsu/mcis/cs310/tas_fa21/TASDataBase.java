@@ -6,6 +6,7 @@ import java.sql.*;
 import java.sql.Connection;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 
 public class TASDataBase {
@@ -228,15 +229,52 @@ public class TASDataBase {
     }
     
     
-    
+    public ArrayList<Punch> getDailyPunchList(Badge badge, LocalDate date) {
 
-   
+        ArrayList<Punch> output = null;
+        Punch obj; 
+        output = new ArrayList<>(); 
+        String strbadge = badge.getId();
+        try {
+            String query = "SELECT * FROM punch WHERE badgeid=? AND DATE(originalTimeStamp)=?";
+            PreparedStatement pstSelect = conn.prepareStatement(query);
+            pstSelect.setString(1, strbadge);
+            pstSelect.setDate(2, java.sql.Date.valueOf(date));
+            pstSelect.setString(1, badge.getId());
+            pstSelect.setDate(2, java.sql.Date.valueOf(date));
+            
+            boolean hasResults = pstSelect.execute();
+            
+            
+            if(hasResults){
+                
+                //output = new ArrayList<>();
+                
+                ResultSet resultsSet = pstSelect.getResultSet();
+                while(resultsSet.next()) {
+                    
+                    int id = resultsSet.getInt("id");
+                    int terminalid = resultsSet.getInt("terminalid");
+                    String badgeid = resultsSet.getString("badgeid");
+                    LocalDateTime originalTimeStamp = resultsSet.getTimestamp("originalTimeStamp").toLocalDateTime();
+                    int punchTypeid = resultsSet.getInt("punchTypeId");
+                   
+                     int punchid = resultsSet.getInt("id");
+                    obj = getPunch(punchid);
 
-    
+                    output.add(obj);
+
+                    
+                }
+            }
+                  
+        }
+        catch (SQLException e) {}
+       return output;
+
         
-    
+    }
 
-    
     public void close(){
         
         /*close the database*/
