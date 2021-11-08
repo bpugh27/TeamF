@@ -53,7 +53,7 @@ public class TASDataBase {
             if(hasresults){
                 
                 resultset = pstmt.getResultSet();
-                resultset.next();
+                resultset.first();
                 
                 int punchtypeid = resultset.getInt("punchtypeid");
                 String badgeid = resultset.getString("badgeid");
@@ -258,21 +258,15 @@ public class TASDataBase {
                     String badgeid = resultsSet.getString("badgeid");
                     LocalDateTime originalTimeStamp = resultsSet.getTimestamp("originalTimeStamp").toLocalDateTime();
                     int punchTypeid = resultsSet.getInt("punchTypeId");
-                   
-                     int punchid = resultsSet.getInt("id");
+                    int punchid = resultsSet.getInt("id");
                     obj = getPunch(punchid);
-
                     output.add(obj);
-
-                    
                 }
             }
                   
         }
         catch (SQLException e) {}
-       return output;
-
-        
+        return output;
     }
 
     public void close(){
