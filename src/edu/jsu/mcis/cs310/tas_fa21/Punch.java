@@ -3,6 +3,8 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.*;
+import java.time.temporal.TemporalField;
+import java.time.temporal.WeekFields;
 import java.util.*;
 
 public class Punch {
@@ -87,10 +89,21 @@ public class Punch {
 
     
     
-    public void adjust(Shift s){
-    
-    }
+   public void adjust(Shift s) {
+        TemporalField usWeekDay = WeekFields.of(Locale.US).dayOfWeek();
+        int dayofweek = originaltimestamp.get(usWeekDay);
         
+        adjustmenttype = null;
+//        
+//        LocalDateTime shiftStart = s.getShiftBegin().atDate(originaltimestamp.toLocalDate());
+//        LocalDateTime shiftStop = s.getShiftEnd().atDate(originaltimestamp.toLocalDate());
+//        LocalDateTime lunchStart = s.getLunchBegin().atDate(originaltimestamp.toLocalDate());
+//        LocalDateTime lunchStop = s.getLunchEnd().atDate(originaltimestamp.toLocalDate());
+//        LocalDateTime shiftStartInterval = shiftStart.minusMinutes(s.getInterval());
+//        LocalDateTime shiftStartGrace = shiftStart.plusMinutes(s.getGrace());
+//       
+            s.getLunchBegin();
+    }  
 
         
         
