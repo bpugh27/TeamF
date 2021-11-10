@@ -6,6 +6,7 @@ import java.time.*;
 import java.util.*;
 
 public class Punch {
+    
     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
     private int id;
     private int terminalid;
@@ -14,6 +15,7 @@ public class Punch {
     private PunchType punchtype;
     private String adjustmentype;
     private LocalDateTime adjustedtimestamp;
+   
     
     public Punch(int terminalid, Badge badge, int punchtypeid){
         
@@ -41,6 +43,10 @@ public class Punch {
         this.badge = badge;
         this.punchtype = PunchType.values()[punchtypeid];
         this.originaltimestamp = originaltimestamp;
+    }
+
+    Punch(int id, int terminalid, Badge badge, int punchtypeid, LocalDateTime originaltimestamp) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     public int getPunchId() {
@@ -78,6 +84,16 @@ public class Punch {
     public void setOriginaltimestamp(LocalDateTime originaltimestamp) {
         this.originaltimestamp = originaltimestamp;
     }
+
+    
+    
+    public void adjust(Shift s){
+    
+    }
+        
+
+        
+        
     
     public String printOriginal(){
         
@@ -92,5 +108,17 @@ public class Punch {
         
     }
     
+    public String printAdjusted(){
+        
+        //DateTimeFormatter format = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
+        
+        StringBuilder s = new StringBuilder();
+        
+        s.append('#').append(badge.getId()).append(' ');
+        s.append(punchtype).append(": ").append(adjustedtimestamp.format(dtf));
+        
+        return s.toString().toUpperCase();
+        
+    }
     
 }
