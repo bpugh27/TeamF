@@ -10,8 +10,7 @@ import java.time.temporal.WeekFields;
 
 
 public class Punch {
-    
-    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
+       
     private int id;
     private int terminalid;
     private Badge badge;
@@ -111,6 +110,7 @@ public class Punch {
         TemporalField usWeekDay = WeekFields.of(Locale.US).dayOfWeek();
         int dayofweek = originaltimestamp.get(usWeekDay);
         
+        //Formatting for error prevention
         LocalDateTime shiftStart = s.getShiftBegin().atDate(originaltimestamp.toLocalDate());
         LocalDateTime shiftStop = s.getShiftEnd().atDate(originaltimestamp.toLocalDate());
         LocalDateTime lunchStart = s.getLunchBegin().atDate(originaltimestamp.toLocalDate());
@@ -127,7 +127,7 @@ public class Punch {
         int halfInterval = s.getInterval()/2;
         long roundIntervalLong;
 
-       if(dayofweek != Calendar.SATURDAY && dayofweek != Calendar.SUNDAY) {
+        if(dayofweek != Calendar.SATURDAY && dayofweek != Calendar.SUNDAY) {
            if(punchType == PunchType.CLOCK_IN) {
                
                //adjust for the interval
@@ -198,7 +198,7 @@ public class Punch {
     
     public String printOriginal(){
         
-        //DateTimeFormatter format = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
         
         StringBuilder s = new StringBuilder();
         
@@ -211,14 +211,14 @@ public class Punch {
     
     public String printAdjusted(){
         
-        //DateTimeFormatter format = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
         
         StringBuilder s = new StringBuilder();
         
         s.append('#').append(badge.getId()).append(' ');
         s.append(punchType).append(": ");
-        s.append(adjustedtimestamp.format(dtf));
-        s.append("(").append(adjustmentType).append(")");
+        s.append(adjustedtimestamp.format(dtf).toUpperCase());
+        s.append(" (").append(adjustmentType).append(")");
         
         return s.toString();
         
