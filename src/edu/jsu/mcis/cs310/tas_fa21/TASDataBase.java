@@ -60,6 +60,7 @@ public class TASDataBase {
                 int terminalid = resultset.getInt("terminalid");
                 LocalDateTime originaltimestamp = resultset.getTimestamp("originaltimestamp").toLocalDateTime();
                 
+              //Punch(int id, int terminalid, Badge badge, PunchType punchtypeid, LocalDateTime originaltimestamp)  
                 punch = new Punch(id, terminalid, getBadge(badgeid), punchtypeid, originaltimestamp);
                 
             }
