@@ -33,8 +33,8 @@ public class TASDataBase {
          catch (SQLException e) {}  
     }
     
-    
     //Change to punch type once in project
+    //get punch
     public Punch getPunch(int id){
         
         Punch punch = null;
@@ -47,8 +47,6 @@ public class TASDataBase {
             PreparedStatement pstmt = conn.prepareStatement(query);
             pstmt.setInt(1, id);
             boolean hasresults = pstmt.execute();
-            
-            
             
             if(hasresults){
                 
@@ -67,14 +65,9 @@ public class TASDataBase {
             
         } catch (SQLException e) {}
         
-        
-        
         return punch;
     }
-    
-    
-    
-    
+    //get badge
     public Badge getBadge(String id){
         
         String query = "SELECT * FROM badge WHERE id=?";
@@ -100,8 +93,7 @@ public class TASDataBase {
         Badge badge = new Badge(id, description);
         return badge;
     }
-    
-    
+    //get shift
     public Shift getShift(int shiftID){
         
         //public Shift(int interval, int id, int gracePeriod, Time begin, int dock, Time lunchBegin, int lunchDeduct, Time lunchEnd, Time end, String description) 
@@ -143,7 +135,7 @@ public class TASDataBase {
     return s;
     
     }
-    
+    //get shift
     public Shift getShift(Badge b) {
         
         Shift s = null;
