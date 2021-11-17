@@ -121,4 +121,12 @@ public class Shift {
         
         return d.toString();
     }
+
+    int getLunchduration() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    Object getLunchstart() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

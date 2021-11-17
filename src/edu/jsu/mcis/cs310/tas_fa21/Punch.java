@@ -87,6 +87,10 @@ public class Punch {
     public void setOriginaltimestamp(LocalDateTime originaltimestamp) {
         this.originaltimestamp = originaltimestamp;
     }
+    
+    public LocalDateTime getAdjustedtimestamp() {
+        return adjustedtimestamp;
+    }
 
     
     
