@@ -7,12 +7,12 @@ import org.json.simple.*;
 
 public class Feature5 {
     
-    private TASDatabase db;
+    private TASDataBase db;
     
     @Before
     public void setup() {
         
-        db = new TASDatabase();
+        db = new TASDataBase();
         
     }
     
