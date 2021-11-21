@@ -2,6 +2,8 @@ package edu.jsu.mcis.cs310.tas_fa21;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
+import org.json.simple.*;
 //"C:\Users\Graham\Desktop\JSU Resources\Software Engineering I\Team F Project\github\TeamF\src\edu\jsu\mcis\cs310\tas_fa21\TAS.java"
 
 public class TAS {
@@ -44,8 +46,20 @@ public class TAS {
         
     }
     
-    public static String getPunchListAsJSON(ArrayList dailypunchlist) {
-        return "Test";
+    public static String getPunchListAsJSON(ArrayList<Punch> dailypunchlist) {
+        ArrayList<HashMap<String, String>> jsonData = new ArrayList<>();
+        for(Punch p : dailypunchlist){
+            HashMap<String, String> punchData = new HashMap<>();
+            punchData.put("id", String.valueOf(p.getPunchId()));
+            punchData.put("badgeid", p.getBadge().getId());
+            punchData.put("terminalid", String.valueOf(p.getTerminalid()));
+            punchData.put("punchtype", String.valueOf(p.getPunchtype()));
+            punchData.put("adjustmenttype", p.getAdjustmentType());
+            punchData.put("originaltimestamp", p.printOriginal());
+            punchData.put("adjustedtimestamp", p.printAdjusted());
+            jsonData.add(punchData);
+        }
+        return JSONValue.toJSONString(jsonData);
     }
 }
     

@@ -92,8 +92,14 @@ public class Punch {
         return adjustedtimestamp;
     }
 
-    
-    
+    public String getAdjustmentType() {
+        return adjustmentType;
+    }
+
+    public void setAdjustmentType(String adjustmentType) {
+        this.adjustmentType = adjustmentType;
+    }
+      
 //    public void adjust(Shift s){ //passing in what the shift is supposed to look like
 //    
 //        
@@ -204,12 +210,12 @@ public class Punch {
         
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
         
-        StringBuilder s = new StringBuilder();
+        /*StringBuilder s = new StringBuilder();
         
         s.append('#').append(badge.getId()).append(' ');
-        s.append(punchType).append(": ").append(originaltimestamp.format(dtf));
+        s.append(punchType).append(": ").append(originaltimestamp.format(dtf));*/
         
-        return s.toString().toUpperCase();
+        return originaltimestamp.format(dtf).toString().toUpperCase();
         
     }
     
@@ -217,14 +223,14 @@ public class Punch {
         
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("EEE MM/dd/yyyy HH:mm:ss");
         
-        StringBuilder s = new StringBuilder();
+        /*StringBuilder s = new StringBuilder();
         
         s.append('#').append(badge.getId()).append(' ');
         s.append(punchType).append(": ");
         s.append(adjustedtimestamp.format(dtf).toUpperCase());
-        s.append(" (").append(adjustmentType).append(")");
+        s.append(" (").append(adjustmentType).append(")");*/
         
-        return s.toString();
+        return adjustedtimestamp.format(dtf).toUpperCase().toString();
         
     }
     
